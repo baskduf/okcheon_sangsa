@@ -1,2 +1,4 @@
 main/.env
 media/
+main/__pycache__/
+okcheon_sangsa/__pycache__/
