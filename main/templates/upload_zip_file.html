@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>압축 파일 업로드</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 8px;
+        }
+        input[type="file"] {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            cursor: pointer;
+        }
+        button[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .message {
+            text-align: center;
+            font-size: 14px;
+            color: #888;
+            margin-top: 10px;
+        }
+        .message a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        .message a:hover {
+            text-decoration: underline;
+        }
+        #loading-message {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            font-size: 18px;
+        }
+        .error-container {
+    display: flex;
+    align-items: start;
+    background-color: #ffe6e6;
+    border-left: 4px solid #ff4d4d;
+    color: #b30000;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    margin: 16px 0;
+}
+.error-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 12px;
+    color: #ff4d4d;
+}
+.error-message {
+    font-size: 14px;
+}
+.error-title {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>압축 파일 업로드</h1>
+        <form method="POST" enctype="multipart/form-data" id="upload-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="zipfile">업로드할 압축 파일을 선택하세요</label>
+                {{ form.as_p }}
+            </div>
+            <button type="submit">업로드</button>
+        </form>
+        <div class="message">
+            <p>압축 파일을 선택하고 업로드 버튼을 클릭하세요.</p>
+        </div>
+    </div>
+    <!-- 로딩 메시지 -->
+    <div id="loading-message">분석 중...</div>
+    {% if error and error != "" %}
+    <div class="error-container">
+        <svg class="error-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m2 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <div>
+            <p class="error-title">Error</p>
+            <span class="error-message">{{ error }}</span>
+        </div>
+    </div>
+    {% endif %}
+
+    
+</body>
+<script>
+    // 폼 제출 시 로딩 메시지를 보이게 하고, 서버 요청을 처리하는 코드
+    const form = document.getElementById('upload-form');
+    const loadingMessage = document.getElementById('loading-message');
+
+    form.addEventListener('submit', function(event) {
+
+        // 로딩 메시지를 보이게 함
+        loadingMessage.style.display = 'block';
+
+    });
+</script>
+</html>

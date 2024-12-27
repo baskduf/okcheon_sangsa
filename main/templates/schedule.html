@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>근무 스케줄</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .step {
+            margin-bottom: 20px;
+        }
+
+        .step h2 {
+            font-size: 1.5em;
+            color: #2c3e50;
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 5px;
+        }
+
+        .step p {
+            font-size: 1.1em;
+            color: #34495e;
+            margin-bottom: 10px;
+        }
+
+        .step hr {
+            border: 0;
+            border-top: 1px solid #bdc3c7;
+            margin-top: 10px;
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        table {
+            border-collapse: collapse;
+            width: 50%;
+            margin: 20px auto;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            text-align: center;
+            padding: 8px;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">근무 스케줄</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>요일</th>
+                <th>오픈</th>
+                <th>마감</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for day, shifts in schedule.items %}
+            <tr>
+                <td>{{ day }}</td>
+                <td>{{ shifts.open }}</td>
+                <td>{{ shifts.close }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <hr>
+    <table>
+        <thead>
+            <tr>
+                <th>이름</th>
+                <th>오픈</th>
+                <th>마감</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for name, shifts in data.items %}
+            <tr>
+                <td>{{ name }}</td>
+                <td>
+                    {% if shifts.open %}
+                        {{ shifts.open|join:", " }}
+                    {% else %}
+                        없음
+                    {% endif %}
+                </td>
+                <td>
+                    {% if shifts.close %}
+                        {{ shifts.close|join:", " }}
+                    {% else %}
+                        없음
+                    {% endif %}
+                </td>
+                <!--<td>
+                    {% if shifts.unavailable %}
+                        {{ shifts.unavailable|join:", " }}
+                    {% else %}
+                        없음
+                    {% endif %}
+                </td>-->
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h1>근무 스케줄 알고리즘 규칙</h1>
+    <div class="container">
+        <div class="step">
+            <h2>1. 직원별 가능한 날짜로 오픈과 마감을 우선 배치</h2>
+            <p>각 날짜마다, 해당 날짜에 <span class="highlight">오픈 가능</span>하고 <span class="highlight">마감 가능한</span> 직원들을 오픈과 마감으로 배치합니다. <br>
+            배치된 직원은 다른 날짜에서 중복 배정되지 않도록 <span class="highlight">assignments</span> 딕셔너리에서 기록됩니다. <br>
+            <span class="highlight">오픈</span>은 먼저 배정된 직원보다 배정이 적은 직원에게 우선 배치됩니다. <br>
+            <span class="highlight">마감</span>도 마찬가지로 배정된 횟수가 적은 직원에게 우선 배정됩니다.</p>
+            <hr>
+        </div>
+    
+        <div class="step">
+            <h2>2. 모든 직원이 최소 1번 오픈과 마감에 배치되었는지 확인</h2>
+            <p>각 직원이 최소한 <span class="highlight">1번 오픈</span>과 <span class="highlight">1번 마감</span>에 배정되었는지 확인합니다. <br>
+            만약 어떤 직원이 오픈이나 마감에 배정되지 않았다면, 그 직원이 가능한 날짜에서 오픈이나 마감을 하나씩 배정합니다.</p>
+            <hr>
+        </div>
+    
+        <div class="step">
+            <h2>3. 배치되지 않은 공석은 가능한 직원 중 고르게 채우기</h2>
+            <p>만약 특정 날짜에 <span class="highlight">오픈</span>이나 <span class="highlight">마감</span>이 배정되지 않은 경우, 그 날짜에 가능한 직원들 중에서 <span class="highlight">고르게</span> 배정합니다. <br>
+            이를 위해 각 직원이 배정된 근무 횟수를 고려하여, 근무가 적은 직원부터 우선 배정합니다. <br>
+            배정되지 않은 공석은 무작위로 채우지 않고, 고르게 근무가 배정되도록 합니다.</p>
+        </div>
+    </div>
+    
+    
+
+</body>
+</html>
